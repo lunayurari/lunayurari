@@ -30,13 +30,16 @@ interface BskyFeedResponse {
   feed: BskyFeedItem[];
 }
 
+// Fetch extra posts to account for filtering out reposts and replies
+const FETCH_MULTIPLIER = 3;
+
 export async function getBlueskyPosts(
   handle: string,
   limit = 5
 ): Promise<BlueskyPost[]> {
   try {
     const res = await fetch(
-      `https://public.api.bsky.app/xrpc/app.bsky.feed.getAuthorFeed?actor=${encodeURIComponent(handle)}&limit=${limit * 3}`,
+      `https://public.api.bsky.app/xrpc/app.bsky.feed.getAuthorFeed?actor=${encodeURIComponent(handle)}&limit=${limit * FETCH_MULTIPLIER}`,
       { next: { revalidate: 3600 } }
     );
     if (!res.ok) return [];
@@ -51,17 +54,20 @@ export async function getBlueskyPosts(
           !item.post.record.reply
       )
       .slice(0, limit)
-      .map((item) => {
+      .flatMap((item) => {
         const rkey = item.post.uri.split("/").at(-1) ?? "";
-        return {
-          uri: item.post.uri,
-          text: item.post.record.text,
-          createdAt: item.post.record.createdAt,
-          likeCount: item.post.likeCount ?? 0,
-          replyCount: item.post.replyCount ?? 0,
-          repostCount: item.post.repostCount ?? 0,
-          webUrl: `https://bsky.app/profile/${handle}/post/${rkey}`,
-        };
+        if (!rkey) return [];
+        return [
+          {
+            uri: item.post.uri,
+            text: item.post.record.text,
+            createdAt: item.post.record.createdAt,
+            likeCount: item.post.likeCount ?? 0,
+            replyCount: item.post.replyCount ?? 0,
+            repostCount: item.post.repostCount ?? 0,
+            webUrl: `https://bsky.app/profile/${handle}/post/${rkey}`,
+          },
+        ];
       });
   } catch (err) {
     console.error("[getBlueskyPosts] Failed to fetch Bluesky posts:", err);

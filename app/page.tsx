@@ -161,7 +161,7 @@ export default async function HomePage() {
               </div>
               <div className="flex flex-col gap-3">
                 {posts.map((post) => (
-                  <PostCard key={post.uri} post={post} />
+                  <PostCard key={post.uri} post={post} handle="lunayurari.bsky.social" />
                 ))}
               </div>
             </div>
@@ -182,7 +182,7 @@ export default async function HomePage() {
   );
 }
 
-function PostCard({ post }: { post: BlueskyPost }) {
+function PostCard({ post, handle }: { post: BlueskyPost; handle: string }) {
   return (
     <a
       href={post.webUrl}
@@ -195,7 +195,7 @@ function PostCard({ post }: { post: BlueskyPost }) {
         <div className="flex items-center gap-1.5">
           <BlueskyIcon color="#0f73ff" size={13} />
           <span className="text-[13px] font-medium text-[#171717]">
-            lunayurari.bsky.social
+            {handle}
           </span>
         </div>
         <span className="text-[12px] text-[#aaaaaa]">

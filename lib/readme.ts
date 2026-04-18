@@ -28,7 +28,8 @@ export function parseReadme(): ReadmeData {
   try {
     const readmePath = path.join(process.cwd(), "README.md");
     content = fs.readFileSync(readmePath, "utf-8");
-  } catch {
+  } catch (err) {
+    console.error("[parseReadme] Failed to read README.md:", err);
     return DEFAULTS;
   }
 

@@ -27,8 +27,8 @@ function getSocialStyle(label: string): {
   return { bg: "#171717", icon: null, display: label };
 }
 
-export default async function HomePage() {
-  const { name, quote, bio, greeting, socialLinks } = await parseReadme();
+export default function HomePage() {
+  const { name, quote, bio, greeting, socialLinks } = parseReadme();
 
   return (
     <main className="min-h-screen bg-white">

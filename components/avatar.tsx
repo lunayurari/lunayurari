@@ -21,6 +21,7 @@ export function Avatar({ src, alt, size = 80 }: AvatarProps) {
           height: size,
           boxShadow: "rgb(235,235,235) 0px 0px 0px 1px",
         }}
+        role="img"
         aria-label={alt}
       >
         <svg
@@ -33,6 +34,7 @@ export function Avatar({ src, alt, size = 80 }: AvatarProps) {
           strokeWidth="1.5"
           strokeLinecap="round"
           strokeLinejoin="round"
+          aria-hidden="true"
         >
           <circle cx="12" cy="8" r="4" />
           <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />

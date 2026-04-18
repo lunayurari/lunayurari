@@ -1,6 +1,3 @@
-import { remark } from "remark";
-import remarkGfm from "remark-gfm";
-import remarkHtml from "remark-html";
 import fs from "fs";
 import path from "path";
 
@@ -16,16 +13,11 @@ export interface ReadmeData {
   bio: string;
   greeting: string;
   socialLinks: SocialLink[];
-  rawHtml: string;
 }
 
-export async function parseReadme(): Promise<ReadmeData> {
+export function parseReadme(): ReadmeData {
   const readmePath = path.join(process.cwd(), "README.md");
   const content = fs.readFileSync(readmePath, "utf-8");
-
-  const processor = remark().use(remarkGfm).use(remarkHtml, { sanitize: true });
-  const result = await processor.process(content);
-  const rawHtml = result.toString();
 
   // Extract name from "## 你好，我是 ..." heading
   const nameMatch = content.match(/##\s+你好，我是\s+(.+)/);
@@ -68,5 +60,5 @@ export async function parseReadme(): Promise<ReadmeData> {
   const bio = paragraphs[0] ?? "";
   const greeting = paragraphs[1] ?? "";
 
-  return { name, quote, bio, greeting, socialLinks, rawHtml };
+  return { name, quote, bio, greeting, socialLinks };
 }

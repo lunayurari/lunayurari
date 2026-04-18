@@ -15,13 +15,26 @@ export interface ReadmeData {
   socialLinks: SocialLink[];
 }
 
+const DEFAULTS: ReadmeData = {
+  name: "悠然折耳",
+  quote: "",
+  bio: "",
+  greeting: "",
+  socialLinks: [],
+};
+
 export function parseReadme(): ReadmeData {
-  const readmePath = path.join(process.cwd(), "README.md");
-  const content = fs.readFileSync(readmePath, "utf-8");
+  let content: string;
+  try {
+    const readmePath = path.join(process.cwd(), "README.md");
+    content = fs.readFileSync(readmePath, "utf-8");
+  } catch {
+    return DEFAULTS;
+  }
 
   // Extract name from "## 你好，我是 ..." heading
   const nameMatch = content.match(/##\s+你好，我是\s+(.+)/);
-  const name = nameMatch ? nameMatch[1].trim() : "悠然折耳";
+  const name = nameMatch ? nameMatch[1].trim() : DEFAULTS.name;
 
   // Extract blockquote
   const quoteMatch = content.match(/>\s+(.+)/);

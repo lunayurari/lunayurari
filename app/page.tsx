@@ -75,7 +75,7 @@ export default async function HomePage() {
         <section className="mx-auto max-w-[720px] px-6 pt-20 pb-16">
           {/* Avatar */}
           <div className="mb-8">
-            <Avatar src="/avatar.jpg" alt={name} size={80} />
+            <Avatar src="/avatar.png" alt={name} size={80} />
           </div>
 
           {/* Name heading */}

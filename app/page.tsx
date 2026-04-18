@@ -4,8 +4,32 @@ import { Avatar } from "@/components/avatar";
 
 export const dynamic = "force-static";
 
+// Map social link labels to platform identifiers for styling
+function getSocialStyle(label: string): {
+  bg: string;
+  icon: React.ReactNode;
+  display: string;
+} {
+  const lower = label.toLowerCase();
+  if (lower === "x") {
+    return {
+      bg: "#171717",
+      icon: <XIcon />,
+      display: "@lunayurari",
+    };
+  }
+  if (lower === "bluesky") {
+    return {
+      bg: "#0f73ff",
+      icon: <BlueskyIcon />,
+      display: label,
+    };
+  }
+  return { bg: "#171717", icon: null, display: label };
+}
+
 export default async function HomePage() {
-  const { name, quote, bio, greeting } = await parseReadme();
+  const { name, quote, bio, greeting, socialLinks } = await parseReadme();
 
   return (
     <main className="min-h-screen bg-white">
@@ -22,22 +46,17 @@ export default async function HomePage() {
             {name}
           </span>
           <div className="flex items-center gap-4">
-            <Link
-              href="https://twitter.com/lunayurari"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-[13px] font-medium text-[#666666] hover:text-[#171717] transition-colors"
-            >
-              X
-            </Link>
-            <Link
-              href="https://bsky.app/profile/lunayurari.bsky.social"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-[13px] font-medium text-[#666666] hover:text-[#171717] transition-colors"
-            >
-              Bluesky
-            </Link>
+            {socialLinks.map((link) => (
+              <Link
+                key={link.url}
+                href={link.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[13px] font-medium text-[#666666] hover:text-[#171717] transition-colors"
+              >
+                {link.label}
+              </Link>
+            ))}
           </div>
         </div>
       </nav>
@@ -83,36 +102,30 @@ export default async function HomePage() {
         )}
 
         {/* Social badges */}
-        <div className="flex flex-wrap gap-2 mb-12">
-          <Link
-            href="https://twitter.com/lunayurari"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 px-3 py-1 rounded-[9999px] text-[12px] font-medium transition-opacity hover:opacity-80"
-            style={{
-              background: "#171717",
-              color: "#ffffff",
-              fontFeatureSettings: '"liga"',
-            }}
-          >
-            <XIcon />
-            @lunayurari
-          </Link>
-          <Link
-            href="https://bsky.app/profile/lunayurari.bsky.social"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 px-3 py-1 rounded-[9999px] text-[12px] font-medium transition-opacity hover:opacity-80"
-            style={{
-              background: "#0f73ff",
-              color: "#ffffff",
-              fontFeatureSettings: '"liga"',
-            }}
-          >
-            <BlueskyIcon />
-            悠然折耳
-          </Link>
-        </div>
+        {socialLinks.length > 0 && (
+          <div className="flex flex-wrap gap-2 mb-12">
+            {socialLinks.map((link) => {
+              const { bg, icon, display } = getSocialStyle(link.label);
+              return (
+                <Link
+                  key={link.url}
+                  href={link.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-[9999px] text-[12px] font-medium transition-opacity hover:opacity-80"
+                  style={{
+                    background: bg,
+                    color: "#ffffff",
+                    fontFeatureSettings: '"liga"',
+                  }}
+                >
+                  {icon}
+                  {display}
+                </Link>
+              );
+            })}
+          </div>
+        )}
 
         {/* Divider */}
         <div className="border-t border-[#ebebeb] mb-12" />

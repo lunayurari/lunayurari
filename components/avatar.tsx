@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 
 interface AvatarProps {
   src: string;
@@ -41,19 +42,24 @@ export function Avatar({ src, alt, size = 80 }: AvatarProps) {
   }
 
   return (
-    // eslint-disable-next-line @next/next/no-img-element
-    <img
-      src={src}
-      alt={alt}
-      width={size}
-      height={size}
-      onError={() => setError(true)}
-      className="rounded-full object-cover"
+    <div
+      className="rounded-full overflow-hidden bg-[#fafafa]"
       style={{
         width: size,
         height: size,
         boxShadow: "rgb(235,235,235) 0px 0px 0px 1px",
+        flexShrink: 0,
       }}
-    />
+    >
+      <Image
+        src={src}
+        alt={alt}
+        width={size}
+        height={size}
+        className="w-full h-full object-cover"
+        onError={() => setError(true)}
+        unoptimized
+      />
+    </div>
   );
 }

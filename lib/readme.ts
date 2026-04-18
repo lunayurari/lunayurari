@@ -4,12 +4,18 @@ import remarkHtml from "remark-html";
 import fs from "fs";
 import path from "path";
 
+export interface SocialLink {
+  label: string;
+  url: string;
+  imageUrl: string;
+}
+
 export interface ReadmeData {
   name: string;
   quote: string;
   bio: string;
   greeting: string;
-  socialLinks: { label: string; url: string; imageUrl: string }[];
+  socialLinks: SocialLink[];
   rawHtml: string;
 }
 
@@ -17,7 +23,7 @@ export async function parseReadme(): Promise<ReadmeData> {
   const readmePath = path.join(process.cwd(), "README.md");
   const content = fs.readFileSync(readmePath, "utf-8");
 
-  const processor = remark().use(remarkGfm).use(remarkHtml, { sanitize: false });
+  const processor = remark().use(remarkGfm).use(remarkHtml, { sanitize: true });
   const result = await processor.process(content);
   const rawHtml = result.toString();
 
@@ -29,17 +35,12 @@ export async function parseReadme(): Promise<ReadmeData> {
   const quoteMatch = content.match(/>\s+(.+)/);
   const quote = quoteMatch ? quoteMatch[1].trim() : "";
 
-  // Extract social links from badge markdown links
-  const socialLinks: { label: string; url: string; imageUrl: string }[] = [];
+  // Extract social links using matchAll for safer iteration
   const badgeLinkRegex = /\[!\[([^\]]+)\]\(([^)]+)\)\]\(([^)]+)\)/g;
-  let match;
-  while ((match = badgeLinkRegex.exec(content)) !== null) {
-    socialLinks.push({
-      label: match[1],
-      url: match[3],
-      imageUrl: match[2],
-    });
-  }
+  const socialLinks: SocialLink[] = Array.from(
+    content.matchAll(badgeLinkRegex),
+    (m) => ({ label: m[1], imageUrl: m[2], url: m[3] })
+  );
 
   // Extract all regular paragraphs (non-heading, non-quote, non-badge lines)
   const lines = content.split("\n");

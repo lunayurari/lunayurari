@@ -1,18 +1,11 @@
 import fs from "fs";
 import path from "path";
 
-export interface SocialLink {
-  label: string;
-  url: string;
-  imageUrl: string;
-}
-
 export interface ReadmeData {
   name: string;
   quote: string;
   bio: string;
   greeting: string;
-  socialLinks: SocialLink[];
 }
 
 const DEFAULTS: ReadmeData = {
@@ -20,7 +13,6 @@ const DEFAULTS: ReadmeData = {
   quote: "",
   bio: "",
   greeting: "",
-  socialLinks: [],
 };
 
 export function parseReadme(): ReadmeData {
@@ -41,13 +33,6 @@ export function parseReadme(): ReadmeData {
   const quoteMatch = content.match(/>\s+(.+)/);
   const quote = quoteMatch ? quoteMatch[1].trim() : "";
 
-  // Extract social links using matchAll for safer iteration
-  const badgeLinkRegex = /\[!\[([^\]]+)\]\(([^)]+)\)\]\(([^)]+)\)/g;
-  const socialLinks: SocialLink[] = Array.from(
-    content.matchAll(badgeLinkRegex),
-    (m) => ({ label: m[1], imageUrl: m[2], url: m[3] })
-  );
-
   // Extract all regular paragraphs (non-heading, non-quote, non-badge lines)
   const lines = content.split("\n");
   const paragraphs: string[] = [];
@@ -63,9 +48,7 @@ export function parseReadme(): ReadmeData {
       afterQuote &&
       trimmed &&
       !trimmed.startsWith("#") &&
-      !trimmed.startsWith("[") &&
-      !trimmed.startsWith("!") &&
-      !trimmed.startsWith("[![")
+      !trimmed.startsWith("[")
     ) {
       paragraphs.push(trimmed);
     }
@@ -74,5 +57,5 @@ export function parseReadme(): ReadmeData {
   const bio = paragraphs[0] ?? "";
   const greeting = paragraphs[1] ?? "";
 
-  return { name, quote, bio, greeting, socialLinks };
+  return { name, quote, bio, greeting };
 }

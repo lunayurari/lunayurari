@@ -1,0 +1,22 @@
+{
+  "links": [
+    {
+      "platform": "github",
+      "label": "GitHub",
+      "url": "https://github.com/lunayurari",
+      "username": "lunayurari"
+    },
+    {
+      "platform": "x",
+      "label": "X",
+      "url": "https://twitter.com/lunayurari",
+      "username": "@lunayurari"
+    },
+    {
+      "platform": "bluesky",
+      "label": "Bluesky",
+      "url": "https://bsky.app/profile/lunayurari.bsky.social",
+      "username": "lunayurari.bsky.social"
+    }
+  ]
+}

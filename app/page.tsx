@@ -1,6 +1,7 @@
 import { parseReadme } from "@/lib/readme";
 import Link from "next/link";
 import { Avatar } from "@/components/avatar";
+import { CurrentYear } from "@/components/current-year";
 
 export const dynamic = "force-static";
 
@@ -147,7 +148,7 @@ export default async function HomePage() {
       <footer className="border-t border-[#ebebeb]">
         <div className="mx-auto max-w-[720px] px-6 py-8 flex items-center justify-between">
           <span className="text-[12px] text-[#808080]">
-            © {new Date().getFullYear()} {name}
+            © <CurrentYear /> {name}
           </span>
           <span className="text-[12px] text-[#808080]">nya~</span>
         </div>

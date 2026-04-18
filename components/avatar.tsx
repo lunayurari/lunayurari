@@ -58,7 +58,6 @@ export function Avatar({ src, alt, size = 80 }: AvatarProps) {
         height={size}
         className="w-full h-full object-cover"
         onError={() => setError(true)}
-        unoptimized
       />
     </div>
   );

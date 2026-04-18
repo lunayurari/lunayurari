@@ -3,8 +3,6 @@ import Link from "next/link";
 import { Avatar } from "@/components/avatar";
 import { CurrentYear } from "@/components/current-year";
 
-export const dynamic = "force-static";
-
 // Map social link labels to platform identifiers for styling
 function getSocialStyle(label: string): {
   bg: string;
